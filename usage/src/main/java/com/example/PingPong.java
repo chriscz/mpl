@@ -1,4 +1,4 @@
-package za.percipio.mpl.example;
+package com.example;
 
 import java.io.IOException;
 import java.io.Serializable;
