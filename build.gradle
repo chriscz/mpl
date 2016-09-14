@@ -1,0 +1,37 @@
+apply plugin: 'java'
+apply plugin: 'idea'
+
+sourceCompatibility = 7
+version = '0.0.1'
+
+jar() {
+    manifest {
+        attributes 'Implementation-Title': 'MPL Library',
+                'Implementation-Version': version
+    }
+}
+
+task jarFat(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'MPL Library',
+                'Implementation-Version': version
+    }
+    baseName = project.name + '-all'
+    doFirst {
+        from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    }
+    exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
+    with jar
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+}
+
+test {
+
+}
