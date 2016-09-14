@@ -1,0 +1,14 @@
+# to build, do a 
+gradle build
+
+# to re-download the dependencies before building, do a
+gradle build --refresh-dependencies
+
+# Look at https://jitpack.io/docs/#building-with-jitpack
+# for more information on building from the github
+# project
+
+# to build and run:
+gradle jarFat
+java -jar build/libs/usage-all.jar
+

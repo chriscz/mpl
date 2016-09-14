@@ -1,22 +1,48 @@
 apply plugin: 'java'
 apply plugin: 'idea'
+apply plugin: 'maven'
+
+group = 'com.github.chriscz'
+
+defaultTasks 'jarFat'
 
 sourceCompatibility = 7
-version = '0.0.1'
 
-jar() {
-    manifest {
-        attributes 'Implementation-Title': 'MPL Library',
-                'Implementation-Version': version
-    }
+ext.versionPropsFile = file('version.properties')
+ext.versionProps = new Properties()
+ext.versionParts = new int[0]
+
+/* Ensure that the version number is always loaded */
+_load_version()
+
+/**
+ * Version tasks
+ */
+task bump_patch() << {
+    versionParts[2]++
+    _update_props()
 }
+
+task bump_release() << {
+    versionParts[1]++
+    _update_props()
+}
+
+task bump_major() << {
+    versionParts[0]++
+    _update_props()
+}
+
+/**
+ * End of versioning tasks
+ */
 
 task jarFat(type: Jar) {
     manifest {
         attributes 'Implementation-Title': 'MPL Library',
-                'Implementation-Version': version
+                'Implementation-Version': get_version()
     }
-    baseName = project.name + '-all'
+    baseName = project.name + '-' + get_version() + '-all'
     doFirst {
         from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     }
@@ -34,4 +60,46 @@ dependencies {
 
 test {
 
+}
+
+
+int[] _from_version_string(String s) {
+    def parts = s.split("\\.")
+    def int_parts = new int[parts.length]
+    def j = 0;
+
+    for (i in parts) {
+        int_parts[j++] = Integer.parseInt(i);
+    }
+    return int_parts;
+}
+
+String _to_version_string(int[] ver_arr) {
+    def String v = "";
+    if (ver_arr.length > 0) {
+        v = ver_arr[0].toString()
+        for (int i = 1; i < ver_arr.length; i++) {
+            v += '.' + ver_arr[i];
+        }
+    }
+    return v;
+}
+
+void _load_version() {
+    if (versionPropsFile.canRead()) {
+        versionProps.load(new FileInputStream(versionPropsFile))
+        def version = versionProps['VERSION_CODE']
+        versionParts = _from_version_string(version)
+    } else {
+        throw new RuntimeException("Could not read version.properties!")
+    }
+}
+
+String get_version() {
+    return _to_version_string(versionParts)
+}
+
+void _update_props() {
+    versionProps['VERSION_CODE'] = get_version()
+    versionProps.store(versionPropsFile.newWriter(), null)
 }
