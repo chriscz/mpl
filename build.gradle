@@ -23,12 +23,15 @@ task bump_patch() << {
     _update_props()
 }
 
-task bump_release() << {
+task bump_minor() << {
+    versionParts[2] = 0
     versionParts[1]++
     _update_props()
 }
 
 task bump_major() << {
+    versionParts[2] = 0
+    versionParts[1] = 0
     versionParts[0]++
     _update_props()
 }
