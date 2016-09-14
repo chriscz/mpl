@@ -10,5 +10,5 @@ gradle build --refresh-dependencies
 
 # to build and run:
 gradle jarFat
-java -jar build/libs/usage-all.jar
+java -jar build/libs/example-project-all.jar
 
