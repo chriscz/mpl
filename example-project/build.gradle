@@ -13,7 +13,7 @@ jar {
 task jarFat(type: Jar) {
     manifest {
         attributes 'Implementation-Title': 'MPL Test',
-                   'Main-Class': 'com.example.PingPong'
+                'Main-Class': 'com.example.PingPong'
     }
     baseName = project.name + '-all'
     doFirst {
@@ -31,5 +31,10 @@ repositories {
 }
 
 dependencies {
-    compile('com.github.chriscz:mpl:develop-SNAPSHOT') { changing = true }
+    /* Here are some examples of possible compile directives for different branches / versions
+     *
+     * compile('com.github.chriscz:mpl:0.0.2')
+     * compile('com.github.chriscz:mpl:master-SNAPSHOT')
+     */
+    compile('com.github.chriscz:mpl:master-SNAPSHOT')
 }
